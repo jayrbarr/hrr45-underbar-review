@@ -219,12 +219,27 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
-
+    var extObjs = [...arguments].slice(1);
+    _.each(extObjs, function(ext) {
+      for (let key in ext) {
+        obj[key] = ext[key];
+      }
+    });
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    var extObjs = [...arguments].slice(1);
+    _.each(extObjs, function(ext) {
+      for (let key in ext) {
+        if (typeof obj[key] === 'undefined') {
+          obj[key] = ext[key];
+        }
+      }
+    });
+    return obj;
   };
 
 
@@ -285,6 +300,7 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    setTimeout(func, wait, ...[...arguments].slice(2));
   };
 
 
@@ -299,6 +315,16 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var retArr = [];
+    _.each(array, function(item) {
+      var random = Math.floor(Math.random() * 2);
+      if (random) {
+        retArr.push(item);
+      } else {
+        retArr.unshift(item);
+      }
+    });
+    return retArr;
   };
 
 
