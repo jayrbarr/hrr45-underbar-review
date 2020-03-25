@@ -38,7 +38,7 @@
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
-    return n === undefined ? array[ array.length - 1 ] : array.slice( Math.max( array.length - n , 0) );
+    return n === undefined ? array[ array.length - 1 ] : array.slice( Math.max( array.length - n, 0) );
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -88,10 +88,22 @@
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, (item) => !test(item));
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
+    iterator = iterator || _.identity;
+    var retArr = [];
+    var chkArr = [];
+    _.each(array, function(item) {
+      var temp = iterator(item);
+      if (!_.contains(chkArr, temp)) {
+        chkArr.push(temp);
+        retArr.push(item);
+      }
+    });
+    return retArr;
   };
 
 
@@ -144,6 +156,14 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    if (typeof accumulator === 'undefined' && Array.isArray(collection)) {
+      accumulator = collection[0];
+      collection = collection.slice(1);
+    }
+    _.each(collection, function(item) {
+      accumulator = iterator(accumulator, item);
+    });
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
