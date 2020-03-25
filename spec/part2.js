@@ -194,8 +194,6 @@
         var destination = { a: 'b' };
         var source = { a: 'c' };
         var extended = _.extend(destination, source);
-      });
-
         expect(extended.a).to.equal('c');
       });
 
